@@ -162,7 +162,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
             >
               <FileText size={16} />
               Generate Document
@@ -182,7 +182,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
           <button
             type="button"
             onClick={handleDownload}
-            className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow transition hover:border-slate-300 hover:text-slate-900"
+            className="inline-flex items-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow transition hover:border-slate-300 hover:text-slate-900"
           >
             <Download size={16} />
             Download PDF

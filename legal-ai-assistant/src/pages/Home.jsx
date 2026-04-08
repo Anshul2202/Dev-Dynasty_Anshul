@@ -39,14 +39,14 @@ function Home() {
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
             to="/chat"
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-slate-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
           >
             <MessageSquare size={18} />
             Start Chat
           </Link>
           <Link
             to="/upload"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-medium text-slate-700 shadow-lg transition hover:text-slate-900"
+            className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-medium text-slate-700 shadow transition hover:text-slate-900"
           >
             <Upload size={18} />
             Upload Document

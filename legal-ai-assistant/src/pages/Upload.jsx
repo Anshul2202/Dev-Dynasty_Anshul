@@ -105,7 +105,7 @@ function Upload() {
               event.stopPropagation()
               handleBrowse()
             }}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
           >
             <UploadIcon size={16} />
             Upload Document

@@ -87,7 +87,7 @@ function Chat() {
         <button
           type="button"
           onClick={handleClear}
-          className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow transition hover:border-slate-300 hover:text-slate-900"
+          className="inline-flex items-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow transition hover:border-slate-300 hover:text-slate-900"
         >
           <Trash2 size={16} />
           Clear Chat
@@ -141,7 +141,7 @@ function Chat() {
               type="button"
               onClick={handleSend}
               disabled={isTyping}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               <Send size={16} />
               Send
