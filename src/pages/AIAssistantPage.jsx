@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../lib/api';
+import api, { getApiErrorMessage } from '../lib/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const starterMessages = [
@@ -22,6 +22,7 @@ function AIAssistantPage() {
     const trimmed = input.trim();
 
     if (!trimmed) {
+      setError('Enter a message before sending.');
       return;
     }
 
@@ -59,11 +60,7 @@ function AIAssistantPage() {
         },
       ]);
     } catch (submissionError) {
-      setError(
-        submissionError.response?.data?.message ||
-          submissionError.message ||
-          'Unable to contact the AI assistant right now.',
-      );
+      setError(getApiErrorMessage(submissionError, 'Unable to contact the AI assistant right now.'));
     } finally {
       setIsSending(false);
     }

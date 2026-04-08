@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../lib/api';
+import api, { getApiErrorMessage } from '../lib/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DocumentPreview from '../components/DocumentPreview';
 
@@ -40,11 +40,7 @@ function DocumentGeneratorPage() {
 
       setDocumentText(generatedDocument);
     } catch (submissionError) {
-      setError(
-        submissionError.response?.data?.message ||
-          submissionError.message ||
-          'Unable to generate the document right now.',
-      );
+      setError(getApiErrorMessage(submissionError, 'Unable to generate the document right now.'));
     } finally {
       setIsGenerating(false);
     }

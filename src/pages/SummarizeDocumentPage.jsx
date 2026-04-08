@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../lib/api';
+import api, { getApiErrorMessage } from '../lib/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const acceptedTypes = '.txt,.pdf,.docx';
@@ -82,11 +82,7 @@ function SummarizeDocumentPage() {
       setSummary(summarizedText);
       setProgress(100);
     } catch (submissionError) {
-      setError(
-        submissionError.response?.data?.message ||
-          submissionError.message ||
-          'Unable to summarize the document right now.',
-      );
+      setError(getApiErrorMessage(submissionError, 'Unable to summarize the document right now.'));
       setProgress(0);
     } finally {
       setIsSummarizing(false);
