@@ -1,22 +1,23 @@
-import { Scale, Sparkles } from 'lucide-react'
+import { Route, Routes } from 'react-router-dom'
+import Navbar from './layout/Navbar'
+import AskAIPage from './pages/AskAIPage'
+import GeneratePage from './pages/GeneratePage'
+import HomePage from './pages/HomePage'
+import UploadPage from './pages/UploadPage'
 
 function App() {
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <section className="w-full max-w-3xl rounded-2xl bg-white p-8 shadow-sm text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-white">
-          <Scale size={28} />
-        </div>
-        <h1 className="text-3xl font-bold text-slate-900">Legal AI Platform</h1>
-        <p className="mt-3 text-slate-600">
-          React Router and Lucide are installed, and Tailwind CSS is configured.
-        </p>
-        <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm text-slate-700">
-          <Sparkles size={16} />
-          Ready for the next feature
-        </div>
-      </section>
-    </main>
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(191,219,254,0.45),_transparent_30%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_100%)]">
+      <Navbar />
+      <main className="mx-auto max-w-6xl px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/ask-ai" element={<AskAIPage />} />
+          <Route path="/upload" element={<UploadPage />} />
+          <Route path="/generate" element={<GeneratePage />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
 
