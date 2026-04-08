@@ -2,7 +2,17 @@
 
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', Arial, Helvetica, sans-serif;
+  background: #f8faff;
+  color: #0f172a;
+}
+
+#root {
+  min-height: 100vh;
 }

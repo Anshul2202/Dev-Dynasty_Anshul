@@ -88,13 +88,13 @@ Both parties acknowledge that this document is a draft and should be reviewed be
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[2rem] bg-white p-8 shadow sm:p-10">
+      <div className="rounded-[2rem] border border-white/80 bg-white/90 p-8 shadow-[0_24px_70px_-30px_rgba(79,70,229,0.22)] backdrop-blur sm:p-10">
         <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-violet-700">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
             <FileText size={26} />
           </div>
           <div>
-            <h1 className="text-3xl font-semibold text-slate-900">Generate Document</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-950">Generate Document</h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
               Draft legal agreements with a clean form workflow, guided inputs,
               and an instant preview surface.
@@ -110,7 +110,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
               value={formData.partyA}
               onChange={handleChange}
               placeholder="Enter first party name"
-              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-violet-400"
+              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition duration-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
             />
           </label>
 
@@ -121,7 +121,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
               value={formData.partyB}
               onChange={handleChange}
               placeholder="Enter second party name"
-              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-violet-400"
+              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition duration-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
             />
           </label>
 
@@ -132,7 +132,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
               value={formData.duration}
               onChange={handleChange}
               placeholder="e.g. 12 months"
-              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-violet-400"
+              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition duration-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
             />
           </label>
 
@@ -143,7 +143,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
               value={formData.jurisdiction}
               onChange={handleChange}
               placeholder="e.g. India"
-              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-violet-400"
+              className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition duration-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
             />
           </label>
 
@@ -155,14 +155,14 @@ Both parties acknowledge that this document is a draft and should be reviewed be
               onChange={handleChange}
               rows={5}
               placeholder="Add any extra obligations, confidentiality notes, or terms..."
-              className="resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-violet-400"
+              className="resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition duration-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
             />
           </label>
 
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
+              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-medium text-white shadow-[0_18px_34px_-18px_rgba(79,70,229,0.85)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700"
             >
               <FileText size={16} />
               Generate Document
@@ -171,7 +171,7 @@ Both parties acknowledge that this document is a draft and should be reviewed be
         </form>
       </div>
 
-      <article className="rounded-[2rem] bg-white p-6 shadow sm:p-8">
+      <article className="rounded-[2rem] border border-white/80 bg-white/90 p-6 shadow-[0_24px_60px_-34px_rgba(15,23,42,0.35)] backdrop-blur sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">Generated Document Preview</h2>
@@ -182,15 +182,15 @@ Both parties acknowledge that this document is a draft and should be reviewed be
           <button
             type="button"
             onClick={handleDownload}
-            className="inline-flex items-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow transition hover:border-slate-300 hover:text-slate-900"
+            className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_16px_32px_-24px_rgba(15,23,42,0.45)] transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:text-indigo-700"
           >
             <Download size={16} />
             Download PDF
           </button>
         </div>
 
-        <div className="mt-6 rounded-2xl bg-slate-50 p-4 shadow-inner">
-          <pre className="overflow-x-auto whitespace-pre-wrap rounded-xl bg-white p-5 text-sm leading-7 text-slate-700 shadow">
+        <div className="mt-6 rounded-[1.5rem] bg-gradient-to-br from-indigo-50 via-white to-slate-50 p-4 shadow-inner">
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded-[1.25rem] border border-slate-100 bg-white p-5 text-sm leading-7 text-slate-700 shadow-sm">
             {previewDocument}
           </pre>
         </div>
