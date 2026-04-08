@@ -1,5 +1,6 @@
 import { Send, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { sendMessageToGroq } from '../services/groqService'
 
 const starterMessages = [
   {
@@ -31,10 +32,10 @@ function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const trimmedInput = input.trim()
 
-    if (!trimmedInput) {
+    if (!trimmedInput || isTyping) {
       return
     }
 
@@ -49,18 +50,33 @@ function Chat() {
     setInput('')
     setIsTyping(true)
 
-    window.setTimeout(() => {
+    try {
+      const response = await sendMessageToGroq(trimmedInput)
+
+      if (response === 'Something went wrong. Please try again.') {
+        throw new Error('Groq service returned fallback')
+      }
+
       setMessages((currentMessages) => [
         ...currentMessages,
         {
           id: Date.now() + 1,
           role: 'assistant',
-          content:
-            'This is a demo response for the chat interface. The layout is ready for live AI integration.',
+          content: response,
         },
       ])
+    } catch {
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: Date.now() + 1,
+          role: 'assistant',
+          content: 'Failed to get response from AI.',
+        },
+      ])
+    } finally {
       setIsTyping(false)
-    }, 900)
+    }
   }
 
   const handleClear = () => {
