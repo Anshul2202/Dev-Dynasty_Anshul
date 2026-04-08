@@ -148,6 +148,12 @@ function Chat() {
             <textarea
               value={input}
               onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                  event.preventDefault()
+                  handleSend()
+                }
+              }}
               placeholder="Ask about agreements, clauses, compliance, or legal documents..."
               rows={3}
               className="min-h-[88px] flex-1 resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition duration-200 placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
