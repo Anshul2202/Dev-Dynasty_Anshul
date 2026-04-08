@@ -1,4 +1,4 @@
-function UploadPage() {
+function Upload() {
   return (
     <section className="rounded-[2rem] bg-white p-8 shadow sm:p-10">
       <h1 className="text-3xl font-semibold text-slate-900">Upload</h1>
@@ -9,4 +9,4 @@ function UploadPage() {
   )
 }
 
-export default UploadPage
+export default Upload

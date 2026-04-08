@@ -1,4 +1,4 @@
-function HomePage() {
+function Home() {
   return (
     <section className="rounded-[2rem] bg-white p-8 shadow sm:p-10">
       <p className="inline-flex rounded-full bg-sky-50 px-4 py-2 text-sm font-medium text-sky-700">
@@ -16,4 +16,4 @@ function HomePage() {
   )
 }
 
-export default HomePage
+export default Home

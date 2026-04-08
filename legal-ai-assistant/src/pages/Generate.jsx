@@ -1,4 +1,4 @@
-function GeneratePage() {
+function Generate() {
   return (
     <section className="rounded-[2rem] bg-white p-8 shadow sm:p-10">
       <h1 className="text-3xl font-semibold text-slate-900">Generate</h1>
@@ -9,4 +9,4 @@ function GeneratePage() {
   )
 }
 
-export default GeneratePage
+export default Generate
