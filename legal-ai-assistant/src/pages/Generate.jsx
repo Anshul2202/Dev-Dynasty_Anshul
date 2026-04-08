@@ -1,5 +1,9 @@
 import { Download, FileText } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import {
+  generateDocumentPdfBlob,
+  triggerPdfDownload,
+} from '../services/pdfService'
 
 const initialForm = {
   partyA: '',
@@ -12,6 +16,8 @@ const initialForm = {
 function Generate() {
   const [formData, setFormData] = useState(initialForm)
   const [generatedDocument, setGeneratedDocument] = useState('')
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false)
+  const [pdfError, setPdfError] = useState('')
 
   const previewDocument = useMemo(() => {
     if (generatedDocument) {
@@ -47,6 +53,7 @@ The parties agree to protect confidential information, use it only for authorize
 
   const handleGenerate = (event) => {
     event.preventDefault()
+    setPdfError('')
 
     setGeneratedDocument(`NON-DISCLOSURE AGREEMENT
 
@@ -74,16 +81,19 @@ ${formData.clauses || 'No additional clauses were added.'}
 Both parties acknowledge that this document is a draft and should be reviewed before formal use.`)
   }
 
-  const handleDownload = () => {
-    const blob = new Blob([previewDocument], { type: 'application/pdf' })
-    const fileUrl = URL.createObjectURL(blob)
-    const link = document.createElement('a')
+  const handleDownload = async () => {
+    setPdfError('')
+    setIsDownloadingPdf(true)
 
-    link.href = fileUrl
-    link.download = 'lexnode-document-preview.pdf'
-    link.click()
-
-    URL.revokeObjectURL(fileUrl)
+    try {
+      const blob = await generateDocumentPdfBlob(previewDocument)
+      triggerPdfDownload(blob, 'legal-document.pdf')
+    } catch (error) {
+      console.error('PDF download failed:', error)
+      setPdfError('PDF generation failed')
+    } finally {
+      setIsDownloadingPdf(false)
+    }
   }
 
   return (
@@ -182,12 +192,20 @@ Both parties acknowledge that this document is a draft and should be reviewed be
           <button
             type="button"
             onClick={handleDownload}
-            className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_16px_32px_-24px_rgba(15,23,42,0.45)] transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:text-indigo-700"
+            disabled={isDownloadingPdf}
+            aria-label="Download PDF"
+            className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_16px_32px_-24px_rgba(15,23,42,0.45)] transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Download size={16} />
-            Download PDF
+            <span>{isDownloadingPdf ? 'Preparing PDF' : 'Download PDF'}</span>
           </button>
         </div>
+
+        {pdfError ? (
+          <div className="mt-4 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {pdfError}
+          </div>
+        ) : null}
 
         <div className="mt-6 rounded-[1.5rem] bg-gradient-to-br from-indigo-50 via-white to-slate-50 p-4 shadow-inner">
           <pre className="overflow-x-auto whitespace-pre-wrap rounded-[1.25rem] border border-slate-100 bg-white p-5 text-sm leading-7 text-slate-700 shadow-sm">
