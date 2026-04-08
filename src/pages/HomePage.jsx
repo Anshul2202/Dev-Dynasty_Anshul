@@ -21,6 +21,10 @@ const features = [
     title: 'AI legal assistant',
     description: 'Ask questions, refine language, and get faster help while you prepare documents.',
   },
+  {
+    title: 'Document summarization',
+    description: 'Upload legal files and get concise summaries of obligations, key terms, and risks.',
+  },
 ];
 
 function HomePage() {
@@ -39,6 +43,12 @@ function HomePage() {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link to="/generate-document" className="primary-btn min-w-[180px]">
                 Create Document
+              </Link>
+              <Link
+                to="/summarize-document"
+                className="inline-flex min-w-[180px] items-center justify-center rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 hover:text-white"
+              >
+                Summarize Document
               </Link>
               <Link
                 to="/ai-assistant"
@@ -121,6 +131,40 @@ function HomePage() {
                       <div key={feature.title} className="rounded-2xl bg-slate-50 p-4">
                         <p className="font-semibold text-slate-900">{feature.title}</p>
                         <p className="mt-2 text-sm leading-6 text-slate-500">{feature.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+                <div className="rounded-3xl border border-slate-200 bg-slate-950 p-6 text-white">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-200">
+                    New Workflow
+                  </p>
+                  <h2 className="mt-4 text-2xl font-semibold tracking-tight">
+                    Summarize uploaded agreements in simple language
+                  </h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">
+                    Upload `.txt`, `.pdf`, or `.docx` files and let LexNode extract the text,
+                    highlight obligations, and surface practical risks in a concise summary.
+                  </p>
+                  <Link to="/summarize-document" className="primary-btn mt-6">
+                    Try Summarization
+                  </Link>
+                </div>
+
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+                  <h2 className="text-lg font-semibold text-slate-950">Built for everyday legal work</h2>
+                  <div className="mt-5 space-y-4">
+                    {[
+                      'Generate NDAs and agreements',
+                      'Chat with LexNode AI for simple explanations',
+                      'Summarize uploaded contracts with key risks',
+                    ].map((item) => (
+                      <div key={item} className="flex items-start gap-3 rounded-2xl bg-white p-4 shadow-sm">
+                        <div className="mt-1 h-2.5 w-2.5 rounded-full bg-brand-500" />
+                        <p className="text-sm leading-6 text-slate-600">{item}</p>
                       </div>
                     ))}
                   </div>

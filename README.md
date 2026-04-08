@@ -50,6 +50,14 @@ Run both together:
 npm run dev:full
 ```
 
+## Features
+
+- Generate legal documents with AI
+- Chat with the LexNode AI assistant
+- Upload `.txt`, `.pdf`, or `.docx` files and summarize them
+- Export generated documents as PDF
+- Loading states, validation, and responsive layouts
+
 ## API Endpoints
 
 ### `GET /`
@@ -112,6 +120,24 @@ Response:
 }
 ```
 
+### `POST /summarize`
+
+Request:
+
+- Multipart form-data
+- Field name: `document`
+- Supported file types: `.txt`, `.pdf`, `.docx`
+- File size limit: `5MB`
+
+Response:
+
+```json
+{
+  "extractedText": "Preview of extracted text...",
+  "summary": "Simple-language legal summary..."
+}
+```
+
 ## Folder Structure
 
 ```text
@@ -119,6 +145,8 @@ LexNode/
 |-- services/
 |   `-- geminiService.js
 |-- src/
+|   |-- pages/
+|   |   `-- SummarizeDocumentPage.jsx
 |-- .env.example
 |-- package.json
 |-- server.js

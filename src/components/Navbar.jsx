@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 const navItems = [
   { to: '/', label: 'Home' },
   { to: '/generate-document', label: 'Generate Document' },
+  { to: '/summarize-document', label: 'Summarize Document' },
   { to: '/ai-assistant', label: 'AI Assistant' },
 ];
 
