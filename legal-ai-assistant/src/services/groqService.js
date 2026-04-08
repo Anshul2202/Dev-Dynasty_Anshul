@@ -1,11 +1,12 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 const GROQ_MODEL = 'llama3-8b-8192'
+const FALLBACK_MESSAGE = 'AI service temporarily unavailable. Please try again.'
 
 export async function sendMessageToGroq(message) {
   const apiKey = import.meta.env.VITE_GROQ_API_KEY
 
   if (!apiKey || !message?.trim()) {
-    return 'Something went wrong. Please try again.'
+    return FALLBACK_MESSAGE
   }
 
   try {
@@ -17,6 +18,7 @@ export async function sendMessageToGroq(message) {
       },
       body: JSON.stringify({
         model: GROQ_MODEL,
+        temperature: 0.3,
         messages: [
           {
             role: 'user',
@@ -32,11 +34,8 @@ export async function sendMessageToGroq(message) {
 
     const data = await response.json()
 
-    return (
-      data?.choices?.[0]?.message?.content?.trim() ||
-      'Something went wrong. Please try again.'
-    )
+    return data?.choices?.[0]?.message?.content?.trim() || FALLBACK_MESSAGE
   } catch {
-    return 'Something went wrong. Please try again.'
+    return FALLBACK_MESSAGE
   }
 }

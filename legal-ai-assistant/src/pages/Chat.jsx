@@ -25,17 +25,17 @@ const starterMessages = [
 function Chat() {
   const [messages, setMessages] = useState(starterMessages)
   const [input, setInput] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
+  const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isTyping])
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [messages, loading])
 
   const handleSend = async () => {
     const trimmedInput = input.trim()
 
-    if (!trimmedInput || isTyping) {
+    if (!trimmedInput || loading) {
       return
     }
 
@@ -48,21 +48,20 @@ function Chat() {
       },
     ])
     setInput('')
-    setIsTyping(true)
+    setLoading(true)
 
     try {
       const response = await sendMessageToGroq(trimmedInput)
-
-      if (response === 'Something went wrong. Please try again.') {
-        throw new Error('Groq service returned fallback')
-      }
 
       setMessages((currentMessages) => [
         ...currentMessages,
         {
           id: Date.now() + 1,
           role: 'assistant',
-          content: response,
+          content:
+            response === 'AI service temporarily unavailable. Please try again.'
+              ? 'Failed to connect to AI service.'
+              : response,
         },
       ])
     } catch {
@@ -71,11 +70,11 @@ function Chat() {
         {
           id: Date.now() + 1,
           role: 'assistant',
-          content: 'Failed to get response from AI.',
+          content: 'Failed to connect to AI service.',
         },
       ])
     } finally {
-      setIsTyping(false)
+      setLoading(false)
     }
   }
 
@@ -87,7 +86,7 @@ function Chat() {
         content: 'Chat cleared. Ask a new legal question whenever you are ready.',
       },
     ])
-    setIsTyping(false)
+    setLoading(false)
     setInput('')
   }
 
@@ -132,7 +131,7 @@ function Chat() {
               </div>
             ))}
 
-            {isTyping ? (
+            {loading ? (
               <div className="flex justify-start">
                 <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-700 shadow-sm">
                   AI is typing...
@@ -156,7 +155,7 @@ function Chat() {
             <button
               type="button"
               onClick={handleSend}
-              disabled={isTyping}
+              disabled={loading}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-medium text-white shadow-[0_18px_34px_-18px_rgba(79,70,229,0.85)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               <Send size={16} />
