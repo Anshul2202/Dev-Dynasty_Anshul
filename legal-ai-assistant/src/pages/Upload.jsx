@@ -1,10 +1,214 @@
+import { FileText, FolderOpen, Scale, Upload as UploadIcon } from 'lucide-react'
+import { useRef, useState } from 'react'
+
+const supportedTypes = ['pdf', 'docx', 'txt']
+
+const keyTerms = [
+  {
+    term: 'Indemnity',
+    explanation: 'A legal promise to cover losses or damage suffered by another party.',
+  },
+  {
+    term: 'Confidential Information',
+    explanation: 'Private business or personal information that must not be disclosed without permission.',
+  },
+  {
+    term: 'Termination',
+    explanation: 'The clause that explains how and when the agreement can be legally ended.',
+  },
+]
+
 function Upload() {
+  const inputRef = useRef(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
+
+  const handleFileSelection = (file) => {
+    if (!file) {
+      return
+    }
+
+    const extension = file.name.split('.').pop()?.toLowerCase()
+
+    if (!supportedTypes.includes(extension)) {
+      return
+    }
+
+    setSelectedFile(file)
+  }
+
+  const handleDragOver = (event) => {
+    event.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (event) => {
+    event.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (event) => {
+    event.preventDefault()
+    setIsDragging(false)
+    handleFileSelection(event.dataTransfer.files?.[0])
+  }
+
+  const handleBrowse = () => {
+    inputRef.current?.click()
+  }
+
   return (
-    <section className="rounded-[2rem] bg-white p-8 shadow sm:p-10">
-      <h1 className="text-3xl font-semibold text-slate-900">Upload</h1>
-      <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
-        Upload documents for summarization, review, and AI-powered legal assistance.
-      </p>
+    <section className="space-y-6">
+      <div className="rounded-[2rem] bg-white p-8 shadow sm:p-10">
+        <div className="flex items-start gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+            <UploadIcon size={26} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-semibold text-slate-900">Upload Documents</h1>
+            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+              Upload a legal file to preview its details, generate a concise summary,
+              and review the key legal terms in simple language.
+            </p>
+          </div>
+        </div>
+
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleBrowse}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              handleBrowse()
+            }
+          }}
+          className={`mt-8 rounded-2xl border-2 border-dashed p-8 text-center transition ${
+            isDragging
+              ? 'border-sky-500 bg-sky-50'
+              : 'border-slate-200 bg-slate-50 hover:border-sky-300 hover:bg-sky-50/60'
+          }`}
+        >
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-slate-700 shadow">
+            <FolderOpen size={30} />
+          </div>
+          <h2 className="mt-5 text-xl font-semibold text-slate-900">
+            Drag and drop your file here
+          </h2>
+          <p className="mt-2 text-sm text-slate-500">Supported formats: PDF, DOCX, TXT</p>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation()
+              handleBrowse()
+            }}
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow transition hover:bg-slate-800"
+          >
+            <UploadIcon size={16} />
+            Upload Document
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept=".pdf,.docx,.txt"
+            onChange={(event) => handleFileSelection(event.target.files?.[0])}
+            className="hidden"
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <article className="rounded-[2rem] bg-white p-6 shadow">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+              <FileText size={22} />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-slate-900">File Preview</h2>
+              <p className="text-sm text-slate-500">Selected document details</p>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl bg-slate-50 p-4">
+            {selectedFile ? (
+              <div className="space-y-3">
+                <div className="rounded-xl bg-white p-4 shadow">
+                  <p className="text-sm font-medium text-slate-500">File Name</p>
+                  <p className="mt-1 text-base font-semibold text-slate-900">{selectedFile.name}</p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl bg-white p-4 shadow">
+                    <p className="text-sm font-medium text-slate-500">File Type</p>
+                    <p className="mt-1 text-base text-slate-900">
+                      {selectedFile.name.split('.').pop()?.toUpperCase()}
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-white p-4 shadow">
+                    <p className="text-sm font-medium text-slate-500">File Size</p>
+                    <p className="mt-1 text-base text-slate-900">
+                      {(selectedFile.size / 1024).toFixed(1)} KB
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-xl bg-white p-6 text-sm leading-6 text-slate-500 shadow">
+                No file selected yet. Upload a supported document to view its preview here.
+              </div>
+            )}
+          </div>
+        </article>
+
+        <article className="rounded-[2rem] bg-white p-6 shadow">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+              <Scale size={22} />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-slate-900">Document Summary</h2>
+              <p className="text-sm text-slate-500">Simple legal overview</p>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
+            {selectedFile ? (
+              <div className="rounded-xl bg-white p-4 shadow">
+                This uploaded document appears to define obligations between the
+                parties, restrict disclosure of confidential information, and
+                explain how the agreement may be enforced or terminated.
+              </div>
+            ) : (
+              <div className="rounded-xl bg-white p-4 shadow">
+                Upload a document to generate a summary view here.
+              </div>
+            )}
+          </div>
+        </article>
+      </div>
+
+      <article className="rounded-[2rem] bg-white p-6 shadow">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+            <Scale size={22} />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-slate-900">Key Legal Terms</h2>
+            <p className="text-sm text-slate-500">Simple explanations of common terms</p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {keyTerms.map((item) => (
+            <div key={item.term} className="rounded-xl bg-slate-50 p-5 shadow-sm">
+              <p className="text-lg font-semibold text-slate-900">{item.term}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{item.explanation}</p>
+            </div>
+          ))}
+        </div>
+      </article>
     </section>
   )
 }
