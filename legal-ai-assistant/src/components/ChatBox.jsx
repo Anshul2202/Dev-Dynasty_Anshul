@@ -86,17 +86,19 @@ function ChatBox() {
   }
 
   return (
-    <section className="w-full max-w-3xl rounded-lg shadow p-4 bg-white sm:p-6">
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <section className="w-full rounded-[28px] border border-white/70 bg-white/85 p-4 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur sm:p-6">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Assistant Chat</h2>
-          <p className="mt-1 text-sm text-slate-500">Ask legal drafting and document questions.</p>
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Assistant Chat</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-500">
+            Ask legal drafting and document questions in natural language.
+          </p>
         </div>
         <button
           type="button"
           onClick={handleClearChat}
           disabled={isLoading}
-          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Clear Chat
         </button>
@@ -104,7 +106,7 @@ function ChatBox() {
 
       <div
         ref={scrollContainerRef}
-        className="mb-4 flex h-[420px] flex-col gap-4 overflow-y-auto rounded-lg bg-slate-100 p-4 sm:h-[460px]"
+        className="mb-4 flex h-[420px] flex-col gap-4 overflow-y-auto rounded-[22px] border border-slate-200/70 bg-gradient-to-b from-slate-50 to-slate-100/70 p-4 sm:h-[480px] sm:p-5"
       >
         {messages.map((message, index) => (
           <MessageBubble key={`${message.role}-${index}`} role={message.role} content={message.content} />
