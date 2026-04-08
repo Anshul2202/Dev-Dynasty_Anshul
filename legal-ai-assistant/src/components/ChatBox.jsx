@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import InputBar from './InputBar'
 import MessageBubble from './MessageBubble'
 import { askAI } from '../services/api'
+import { getCachedResponse, setCachedResponse } from '../services/cache'
 
 function ChatBox() {
   const [messages, setMessages] = useState([
@@ -43,7 +44,12 @@ function ChatBox() {
     setIsLoading(true)
 
     try {
-      const reply = await askAI(trimmedValue)
+      const cachedReply = getCachedResponse(trimmedValue)
+      const reply = cachedReply || await askAI(trimmedValue)
+
+      if (!cachedReply) {
+        setCachedResponse(trimmedValue, reply)
+      }
 
       setMessages((currentMessages) => [
         ...currentMessages,
