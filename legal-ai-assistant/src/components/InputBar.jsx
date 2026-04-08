@@ -7,7 +7,7 @@ function InputBar({ value, onChange, onSend, isLoading }) {
 
   return (
     <div className="rounded-lg shadow p-4 bg-white">
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <input
           type="text"
           value={value}
@@ -21,7 +21,7 @@ function InputBar({ value, onChange, onSend, isLoading }) {
           type="button"
           onClick={onSend}
           disabled={isLoading}
-          className="rounded-lg bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="rounded-lg bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400 sm:min-w-[120px]"
         >
           {isLoading ? 'Sending...' : 'Send'}
         </button>
