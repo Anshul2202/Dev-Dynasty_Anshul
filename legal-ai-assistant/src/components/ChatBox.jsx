@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import InputBar from './InputBar'
 import MessageBubble from './MessageBubble'
+import { askAI } from '../services/api'
 
 function ChatBox() {
   const [messages, setMessages] = useState([
@@ -10,6 +11,7 @@ function ChatBox() {
     },
   ])
   const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const scrollContainerRef = useRef(null)
 
   useEffect(() => {
@@ -18,21 +20,49 @@ function ChatBox() {
     }
   }, [messages])
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const trimmedValue = inputValue.trim()
 
-    if (!trimmedValue) {
+    if (!trimmedValue || isLoading) {
       return
     }
 
-    setMessages((currentMessages) => [
-      ...currentMessages,
-      {
-        role: 'user',
-        content: trimmedValue,
-      },
-    ])
+    setMessages((currentMessages) => {
+      const nextMessages = [
+        ...currentMessages,
+        {
+          role: 'user',
+          content: trimmedValue,
+        },
+      ]
+
+      return nextMessages
+    })
     setInputValue('')
+
+    setIsLoading(true)
+
+    try {
+      const reply = await askAI(trimmedValue)
+
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          role: 'assistant',
+          content: reply,
+        },
+      ])
+    } catch {
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          role: 'assistant',
+          content: 'Something went wrong. Please try again.',
+        },
+      ])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -49,12 +79,14 @@ function ChatBox() {
         {messages.map((message, index) => (
           <MessageBubble key={`${message.role}-${index}`} role={message.role} content={message.content} />
         ))}
+        {isLoading ? <MessageBubble role="assistant" content="Thinking..." /> : null}
       </div>
 
       <InputBar
         value={inputValue}
         onChange={setInputValue}
         onSend={handleSend}
+        isLoading={isLoading}
       />
     </section>
   )
