@@ -1,5 +1,7 @@
 import { Send, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { sendMessageToGroq } from '../services/groqService'
 
 const starterMessages = [
@@ -126,7 +128,53 @@ function Chat() {
                       : 'border border-slate-100 bg-slate-50 text-slate-800'
                   }`}
                 >
-                  <p className="text-sm leading-6">{message.content}</p>
+                  <div
+                    className={`prose prose-sm max-w-none text-sm leading-6 ${
+                      message.role === 'user'
+                        ? 'prose-invert text-white'
+                        : 'text-slate-800'
+                    }`}
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({ ...props }) => <p className="my-0 leading-6" {...props} />,
+                        ul: ({ ...props }) => (
+                          <ul className="my-2 list-disc space-y-1 pl-5" {...props} />
+                        ),
+                        ol: ({ ...props }) => (
+                          <ol className="my-2 list-decimal space-y-1 pl-5" {...props} />
+                        ),
+                        li: ({ ...props }) => <li className="pl-1" {...props} />,
+                        strong: ({ ...props }) => <strong className="font-semibold" {...props} />,
+                        em: ({ ...props }) => <em className="italic" {...props} />,
+                        code({ inline, className, children, ...props }) {
+                          if (inline) {
+                            return (
+                              <code
+                                className="rounded bg-black/10 px-1.5 py-0.5 text-[0.9em]"
+                                {...props}
+                              >
+                                {children}
+                              </code>
+                            )
+                          }
+
+                          return (
+                            <code
+                              className={`block overflow-x-auto rounded-lg bg-gray-900 p-3 text-white ${className || ''}`}
+                              {...props}
+                            >
+                              {children}
+                            </code>
+                          )
+                        },
+                        pre: ({ ...props }) => <pre className="my-3" {...props} />,
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             ))}
