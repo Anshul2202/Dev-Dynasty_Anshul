@@ -24,6 +24,42 @@ const upload = multer({
 app.use(cors());
 app.use(express.json());
 
+function sendServerError(res, error, fallbackMessage) {
+  const message = error.message || fallbackMessage;
+  const lowerMessage = message.toLowerCase();
+
+  if (lowerMessage.includes('missing groq_api_key') || lowerMessage.includes('api key')) {
+    return res.status(500).json({
+      message: 'AI provider authentication failed. Check the server API key configuration.',
+    });
+  }
+
+  if (
+    lowerMessage.includes('rate limit') ||
+    lowerMessage.includes('quota') ||
+    lowerMessage.includes('too many requests')
+  ) {
+    return res.status(429).json({
+      message: 'The AI provider is rate limiting requests. Please try again in a moment.',
+    });
+  }
+
+  if (
+    lowerMessage.includes('timeout') ||
+    lowerMessage.includes('network') ||
+    lowerMessage.includes('fetch failed') ||
+    lowerMessage.includes('connect')
+  ) {
+    return res.status(503).json({
+      message: 'The AI provider is temporarily unreachable. Please try again shortly.',
+    });
+  }
+
+  return res.status(500).json({
+    message,
+  });
+}
+
 function getExtension(filename = '') {
   return filename.split('.').pop()?.toLowerCase() || '';
 }
@@ -81,9 +117,7 @@ Make it formal, legally structured, and easy to understand.`;
     const document = await generateAIContent(prompt);
     return res.json({ document });
   } catch (error) {
-    return res.status(500).json({
-      message: error.message || 'Failed to generate document.',
-    });
+    return sendServerError(res, error, 'Failed to generate document.');
   }
 });
 
@@ -104,9 +138,7 @@ User: ${message}`;
     const reply = await chatWithAI(prompt);
     return res.json({ reply });
   } catch (error) {
-    return res.status(500).json({
-      message: error.message || 'Failed to get chat response.',
-    });
+    return sendServerError(res, error, 'Failed to get chat response.');
   }
 });
 
@@ -152,9 +184,7 @@ app.post('/summarize', upload.single('document'), async (req, res) => {
       });
     }
 
-    return res.status(500).json({
-      message: error.message || 'Failed to summarize document.',
-    });
+    return sendServerError(res, error, 'Failed to summarize document.');
   }
 });
 
