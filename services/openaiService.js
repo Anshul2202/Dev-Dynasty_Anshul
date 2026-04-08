@@ -1,13 +1,13 @@
 import OpenAI from 'openai';
 
-const baseURL = process.env.XAI_BASE_URL || 'https://api.x.ai/v1';
-const defaultModel = process.env.XAI_MODEL || 'grok-4';
+const baseURL = process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1';
+const defaultModel = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
 function getClient() {
-  const apiKey = process.env.XAI_API_KEY || process.env.GROK_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY || process.env.GSK_API_KEY;
 
   if (!apiKey) {
-    throw new Error('Missing XAI_API_KEY in environment variables.');
+    throw new Error('Missing GROQ_API_KEY in environment variables.');
   }
 
   return new OpenAI({
@@ -27,12 +27,12 @@ async function createTextResponse(input) {
     const text = response.choices?.[0]?.message?.content?.trim();
 
     if (!text) {
-      throw new Error('Grok returned an empty response.');
+      throw new Error('The AI provider returned an empty response.');
     }
 
     return text;
   } catch (error) {
-    throw new Error(error?.message || 'Failed to communicate with Grok.');
+    throw new Error(error?.message || 'Failed to communicate with the AI provider.');
   }
 }
 
