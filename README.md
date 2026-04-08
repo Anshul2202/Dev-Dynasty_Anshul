@@ -1,68 +1,110 @@
 # LexNode
 
-LexNode is an AI-powered legal document automation platform with a React frontend and an Express backend powered by Gemini.
+LexNode is an AI-powered legal document platform for small businesses, founders, freelancers, and individuals who need help preparing documents faster. It combines a React frontend with an Express backend and lets users generate legal drafts, chat with an AI assistant, and upload existing documents for summarization.
 
-## Backend Files
+## What The App Does
 
-- `server.js`
-- `services/geminiService.js`
-- `.env.example`
+LexNode helps users with three main workflows:
 
-## Setup
+1. Generate legal documents  
+Users can fill in details such as party names, duration, jurisdiction, and additional clauses. LexNode sends that information to the backend, creates a structured AI prompt, and returns a draft document such as an NDA or similar agreement.
 
-1. Install dependencies:
+2. Chat with an AI legal assistant  
+Users can ask beginner-friendly legal questions in plain language. The assistant is designed to explain concepts simply and avoid presenting itself as official legal advice.
 
-```bash
-npm install
+3. Summarize uploaded documents  
+Users can upload `.txt`, `.pdf`, or `.docx` files. The backend extracts the text, sends it to the AI service, and returns a concise summary with key points, obligations, and risks.
+
+## Main Features
+
+- AI-powered legal document generation
+- AI legal assistant chat interface
+- Document upload and summarization
+- PDF export for generated documents
+- Editable document preview
+- Responsive frontend built with React and Tailwind CSS
+- Lightweight backend with no database
+- File validation and upload size limits
+
+## Tech Stack
+
+### Frontend
+
+- React
+- React Router
+- Tailwind CSS
+- Axios
+- `html2pdf.js`
+
+### Backend
+
+- Node.js
+- Express.js
+- Axios / OpenAI-compatible SDK integration
+- Multer
+- `pdf-parse`
+- `mammoth`
+- `dotenv`
+- `cors`
+
+## Project Structure
+
+```text
+LexNode/
+|-- services/
+|   |-- openaiService.js
+|   `-- geminiService.js
+|-- src/
+|   |-- components/
+|   |-- lib/
+|   |-- pages/
+|   |-- App.jsx
+|   `-- main.jsx
+|-- .env
+|-- .env.example
+|-- package.json
+|-- server.js
+`-- README.md
 ```
 
-2. Create a local environment file:
+## Frontend Pages
 
-```bash
-copy .env.example .env
-```
+### Home Page
 
-3. Add your Gemini API key to `.env`:
+The landing page introduces LexNode, highlights the product value, and links users into the main legal workflows.
 
-```env
-PORT=5000
-GEMINI_API_KEY=your_gemini_api_key_here
-VITE_API_BASE_URL=http://localhost:5000
-```
+### Generate Document
 
-## Run Instructions
+This page collects:
 
-Run the backend:
+- Party A Name
+- Party B Name
+- Duration
+- Jurisdiction
+- Additional Clauses
 
-```bash
-npm run server
-```
+The generated draft appears in a preview area where users can edit the text, copy it, or export it as a PDF.
 
-Run the frontend:
+### AI Assistant
 
-```bash
-npm run dev
-```
+This page provides a chat interface for asking legal questions in simple language. Messages are sent to the backend and the AI reply is shown in a conversational UI.
 
-Run both together:
+### Summarize Document
 
-```bash
-npm run dev:full
-```
+This page allows file uploads for `.txt`, `.pdf`, and `.docx` documents. After upload:
 
-## Features
+- the backend extracts the text
+- LexNode summarizes the document
+- the UI shows extracted text preview
+- the UI shows the final summary output
 
-- Generate legal documents with AI
-- Chat with the LexNode AI assistant
-- Upload `.txt`, `.pdf`, or `.docx` files and summarize them
-- Export generated documents as PDF
-- Loading states, validation, and responsive layouts
-
-## API Endpoints
+## Backend API
 
 ### `GET /`
 
-Returns:
+Health check endpoint.
+
+Response:
 
 ```text
 LexNode API is running
@@ -70,7 +112,9 @@ LexNode API is running
 
 ### `POST /generate-document`
 
-Request body:
+Creates an AI-generated legal draft.
+
+Accepted request body:
 
 ```json
 {
@@ -82,7 +126,7 @@ Request body:
 }
 ```
 
-The server also accepts the current frontend field names:
+The current frontend field names also work:
 
 ```json
 {
@@ -94,17 +138,27 @@ The server also accepts the current frontend field names:
 }
 ```
 
+You can also send a direct prompt:
+
+```json
+{
+  "prompt": "Draft a freelancer agreement for a 6 month engagement."
+}
+```
+
 Response:
 
 ```json
 {
-  "document": "Generated NDA text..."
+  "document": "Generated legal draft..."
 }
 ```
 
 ### `POST /chat`
 
-Request body:
+Sends a user message to the AI assistant.
+
+Request:
 
 ```json
 {
@@ -122,11 +176,13 @@ Response:
 
 ### `POST /summarize`
 
+Summarizes an uploaded document.
+
 Request:
 
-- Multipart form-data
+- Content type: `multipart/form-data`
 - Field name: `document`
-- Supported file types: `.txt`, `.pdf`, `.docx`
+- Supported files: `.txt`, `.pdf`, `.docx`
 - File size limit: `5MB`
 
 Response:
@@ -138,17 +194,82 @@ Response:
 }
 ```
 
-## Folder Structure
+## Environment Variables
 
-```text
-LexNode/
-|-- services/
-|   `-- geminiService.js
-|-- src/
-|   |-- pages/
-|   |   `-- SummarizeDocumentPage.jsx
-|-- .env.example
-|-- package.json
-|-- server.js
-`-- README.md
+Create a `.env` file in the project root.
+
+Example:
+
+```env
+PORT=5000
+XAI_API_KEY=your_grok_api_key_here
+XAI_MODEL=grok-4
+XAI_BASE_URL=https://api.x.ai/v1
+VITE_API_BASE_URL=http://localhost:5000
 ```
+
+Notes:
+
+- `XAI_API_KEY` is used only on the backend
+- the frontend must never contain private API keys
+- `VITE_API_BASE_URL` is safe for frontend use because it only points to your backend server
+
+## Local Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create your local env file:
+
+```bash
+copy .env.example .env
+```
+
+Run only the backend:
+
+```bash
+npm run server
+```
+
+Run only the frontend:
+
+```bash
+npm run dev
+```
+
+Run both together:
+
+```bash
+npm run dev:full
+```
+
+Build the frontend:
+
+```bash
+npm run build
+```
+
+## File Handling Rules
+
+- Maximum upload size is `5MB`
+- Supported file formats are `.txt`, `.pdf`, and `.docx`
+- Uploaded files are processed in memory
+- No database is used
+
+## Current Behavior
+
+LexNode is designed to stay lightweight and easy to understand:
+
+- no authentication
+- no database
+- no user accounts
+- no persistent storage
+
+This makes it easy to run locally and extend later.
+
+## Important Disclaimer
+
+LexNode does not provide legal advice. Documents and summaries are AI-generated and should be reviewed by a qualified lawyer before real-world use.
