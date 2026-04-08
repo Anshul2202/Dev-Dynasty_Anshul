@@ -1,0 +1,21 @@
+function InputBar() {
+  return (
+    <div className="rounded-lg shadow p-4 bg-white">
+      <div className="flex gap-3">
+        <input
+          type="text"
+          placeholder="Type your message..."
+          className="flex-1 rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-slate-500"
+        />
+        <button
+          type="button"
+          className="rounded-lg bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-700"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default InputBar
