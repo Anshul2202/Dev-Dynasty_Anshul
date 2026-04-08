@@ -1,29 +1,43 @@
 import { FileText, FolderOpen, Scale, Upload as UploadIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { extractTextFromFile } from '../services/documentParser'
+import { summarizeDocument } from '../services/groqService'
 
 const supportedTypes = ['pdf', 'docx', 'txt']
 
-const keyTerms = [
-  {
-    term: 'Indemnity',
-    explanation: 'A legal promise to cover losses or damage suffered by another party.',
-  },
-  {
-    term: 'Confidential Information',
-    explanation: 'Private business or personal information that must not be disclosed without permission.',
-  },
-  {
-    term: 'Termination',
-    explanation: 'The clause that explains how and when the agreement can be legally ended.',
-  },
-]
+function parseKeyTerms(summary) {
+  return summary
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => /^[-*]\s+/.test(line) || /^\d+\.\s+/.test(line))
+    .map((line) => line.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, ''))
+    .map((line) => line.replace(/\*\*/g, ''))
+    .map((line) => {
+      const [term, ...rest] = line.split(':')
+
+      return {
+        term: term?.trim() || 'Key term',
+        explanation: rest.join(':').trim() || 'Simple explanation not available.',
+      }
+    })
+    .filter((item) => item.term && item.explanation)
+    .slice(0, 6)
+}
 
 function Upload() {
   const inputRef = useRef(null)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [summary, setSummary] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [extractedText, setExtractedText] = useState('')
 
-  const handleFileSelection = (file) => {
+  const keyTerms = parseKeyTerms(summary)
+
+  const handleFileSelection = async (file) => {
     if (!file) {
       return
     }
@@ -31,10 +45,35 @@ function Upload() {
     const extension = file.name.split('.').pop()?.toLowerCase()
 
     if (!supportedTypes.includes(extension)) {
+      setErrorMessage('Unsupported file type. Please upload a PDF, DOCX, or TXT file.')
+      setSummary('')
+      setExtractedText('')
+      setSelectedFile(null)
       return
     }
 
     setSelectedFile(file)
+    setErrorMessage('')
+
+    try {
+      setLoading(true)
+
+      const text = await extractTextFromFile(file)
+      const trimmedText = text.slice(0, 12000)
+
+      setExtractedText(trimmedText)
+
+      const nextSummary = await summarizeDocument(trimmedText)
+
+      setSummary(nextSummary)
+    } catch (error) {
+      console.error(error)
+      setSummary('Error processing document.')
+      setExtractedText('')
+      setErrorMessage('Error processing document.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleDragOver = (event) => {
@@ -50,7 +89,7 @@ function Upload() {
   const handleDrop = (event) => {
     event.preventDefault()
     setIsDragging(false)
-    handleFileSelection(event.dataTransfer.files?.[0])
+    void handleFileSelection(event.dataTransfer.files?.[0])
   }
 
   const handleBrowse = () => {
@@ -114,10 +153,18 @@ function Upload() {
             ref={inputRef}
             type="file"
             accept=".pdf,.docx,.txt"
-            onChange={(event) => handleFileSelection(event.target.files?.[0])}
+            onChange={(event) => {
+              void handleFileSelection(event.target.files?.[0])
+            }}
             className="hidden"
           />
         </div>
+
+        {errorMessage ? (
+          <div className="mt-4 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {errorMessage}
+          </div>
+        ) : null}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -153,6 +200,12 @@ function Upload() {
                     </p>
                   </div>
                 </div>
+                <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
+                  <p className="text-sm font-medium text-slate-500">Extracted Text Preview</p>
+                  <p className="mt-2 line-clamp-6 text-sm leading-6 text-slate-700">
+                    {extractedText || 'Reading content from the selected file...'}
+                  </p>
+                </div>
               </div>
             ) : (
               <div className="rounded-xl border border-slate-100 bg-white p-6 text-sm leading-6 text-slate-500 shadow-sm">
@@ -174,11 +227,15 @@ function Upload() {
           </div>
 
           <div className="mt-6 rounded-[1.25rem] bg-slate-50 p-4 text-sm leading-7 text-slate-600">
-            {selectedFile ? (
+            {loading ? (
+              <div className="rounded-xl border border-indigo-100 bg-indigo-50 p-4 text-indigo-700 shadow-sm">
+                Analyzing document...
+              </div>
+            ) : summary ? (
               <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
-                This uploaded document appears to define obligations between the
-                parties, restrict disclosure of confidential information, and
-                explain how the agreement may be enforced or terminated.
+                <div className="prose prose-sm max-w-none text-slate-700">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{summary}</ReactMarkdown>
+                </div>
               </div>
             ) : (
               <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
@@ -201,15 +258,21 @@ function Upload() {
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          {keyTerms.map((item) => (
-            <div
-              key={item.term}
-              className="rounded-[1.25rem] border border-slate-100 bg-slate-50 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-100 hover:bg-white"
-            >
-              <p className="text-lg font-semibold text-slate-900">{item.term}</p>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{item.explanation}</p>
+          {keyTerms.length > 0 ? (
+            keyTerms.map((item) => (
+              <div
+                key={`${item.term}-${item.explanation}`}
+                className="rounded-[1.25rem] border border-slate-100 bg-slate-50 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-100 hover:bg-white"
+              >
+                <p className="text-lg font-semibold text-slate-900">{item.term}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.explanation}</p>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-[1.25rem] border border-slate-100 bg-slate-50 p-5 text-sm leading-6 text-slate-600 shadow-sm md:col-span-3">
+              Upload a supported document to extract key legal terms from the AI summary.
             </div>
-          ))}
+          )}
         </div>
       </article>
     </section>
