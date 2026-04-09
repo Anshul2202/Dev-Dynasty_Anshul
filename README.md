@@ -1,36 +1,88 @@
 # LexNode
 
-LexNode is a modern AI-powered legal document platform built in the
-`legal-ai-assistant` app folder.
+LexNode is a frontend web application for legal assistance workflows. It helps users ask legal questions, upload legal documents for AI-powered summaries, and generate simple agreement drafts that can be exported as PDF files.
 
-It currently supports:
+The main application lives in the `legal-ai-assistant` folder and is built as a single-page app with React and Vite.
 
-- AI legal chat using Groq
-- Markdown-formatted chat responses
-- Document upload and AI summarization for `PDF`, `DOCX`, and `TXT`
-- Legal document generation with downloadable PDF export
+## What The Project Does
 
-## Project Layout
+LexNode includes these core features:
+
+- AI legal chat for quick question-and-answer guidance
+- Document upload and text extraction for `PDF`, `DOCX`, and `TXT` files
+- AI-generated document summaries with key legal terms in simple language
+- Legal draft generation using a guided form
+- PDF export for generated legal documents
+
+## Languages And Technologies Used
+
+This project is mainly built with:
+
+- `JavaScript` for the application logic and React components
+- `JSX` for building the UI in React
+- `HTML` through the Vite app entry file
+- `CSS` with Tailwind utility classes for styling
+
+Libraries and tools used in the project:
+
+- `React` for the user interface
+- `React Router` for page navigation
+- `Vite` for development and production builds
+- `Tailwind CSS` for styling
+- `Groq API` for AI chat and document summarization
+- `react-markdown` and `remark-gfm` for rendering markdown responses
+- `pdfjs-dist` for reading PDF content
+- `mammoth` for extracting text from DOCX files
+- `pdf-lib` for generating downloadable PDF documents
+
+## Project Structure
 
 ```text
 LexNode/
 |-- legal-ai-assistant/
 |   |-- src/
+|   |   |-- layout/
+|   |   |-- pages/
+|   |   `-- services/
 |   |-- package.json
-|   `-- README.md
+|   |-- vite.config.js
+|   `-- .env.example
 |-- .env.example
-|-- .gitignore
+|-- netlify.toml
 `-- README.md
 ```
 
-## Main App
+## Main Application Pages
 
-The active frontend app lives here:
+- `Home` page for introducing the platform
+- `Chat` page for AI-powered legal conversation
+- `Upload` page for document analysis and summarization
+- `Generate` page for drafting and exporting legal documents
 
-- [legal-ai-assistant/README.md](/d:/LexNode/legal-ai-assistant/README.md#L1)
+## Environment Setup
 
-## Notes
+The app uses environment variables for AI configuration. A local `.env` file inside `legal-ai-assistant` is used to provide values such as:
 
-- The app uses environment variables for Groq configuration.
-- Real secrets should only be stored in local `.env` files and never committed.
-- The Git history was cleaned to remove a previously leaked API key before pushing.
+- `VITE_GROQ_API_KEY`
+- `VITE_GROQ_MODEL`
+
+Do not commit real API keys or secrets to the repository.
+
+## Development
+
+From the `legal-ai-assistant` directory, use:
+
+```bash
+npm install
+npm run dev
+```
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+## Summary
+
+LexNode is a JavaScript-based legal assistant app that combines React, Vite, Tailwind CSS, and the Groq API to provide chat, document understanding, and legal draft generation in a single interface.
