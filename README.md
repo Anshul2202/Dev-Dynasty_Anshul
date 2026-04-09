@@ -1,3 +1,34 @@
+## Kalpathon Hackathon Submission
+
+* Team Name
+  
+[ Dev-Dynasty ]
+
+* Project Name
+
+[LexNode]
+
+* Selected Track
+
+[Web-dev]
+
+* Selected Problem Statement (PS)
+
+[ 5 / AI-Powered Legal Document Automation Platform ]
+
+* Team Leader
+
+Name : Anshul
+Phone no. : 7571032548
+
+* Team Members & Roles
+  
+[Anshul]	[FullStack Developer]
+[Shreya Gupta]	[UI/UX Designer]
+
+
+ * Project Description
+
 # LexNode
 
 LexNode is a frontend web application for legal assistance workflows. It helps users ask legal questions, upload legal documents for AI-powered summaries, and generate simple agreement drafts that can be exported as PDF files.
