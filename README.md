@@ -2,29 +2,29 @@
 
 * Team Name
   
-[ Dev-Dynasty ]
+  [ Dev-Dynasty ]
 
 * Project Name
 
-[LexNode]
+  [LexNode]
 
 * Selected Track
 
-[Web-dev]
+  [Web-dev]
 
 * Selected Problem Statement (PS)
 
-[ 5 / AI-Powered Legal Document Automation Platform ]
+  [ 5 / AI-Powered Legal Document Automation Platform ]
 
 * Team Leader
 
-Name : Anshul
-Phone no. : 7571032548
+  Name : Anshul
+  Phone no. : 7571032548
 
 * Team Members & Roles
   
-[Anshul]	[FullStack Developer]
-[Shreya Gupta]	[UI/UX Designer]
+  [Anshul]	[FullStack Developer]
+  [Shreya Gupta]	[UI/UX Designer]
 
 
  * Project Description
