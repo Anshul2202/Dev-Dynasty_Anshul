@@ -117,3 +117,6 @@ npm run build
 ## Summary
 
 LexNode is a JavaScript-based legal assistant app that combines React, Vite, Tailwind CSS, and the Groq API to provide chat, document understanding, and legal draft generation in a single interface.
+
+
+Project Link : [https://lxnode.netlify.app/]
